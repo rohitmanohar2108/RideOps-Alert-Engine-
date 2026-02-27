@@ -39,30 +39,27 @@ export default function Rules() {
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-2">Rule Engine</h2>
-      <form onSubmit={submit} className="mb-4 space-y-2">
+    <div className="rules-container">
+      <h2 className="rules-title">Rule Engine</h2>
+      <form onSubmit={submit} className="rules-form">
         <input
           placeholder="Name"
           value={form.name}
           onChange={e => setForm({ ...form, name: e.target.value })}
-          className="border px-2 py-1 w-full"
         />
         <input
           placeholder="Condition (JS)"
           value={form.condition}
           onChange={e => setForm({ ...form, condition: e.target.value })}
-          className="border px-2 py-1 w-full"
         />
         <input
           placeholder="Action (JS)"
           value={form.action}
           onChange={e => setForm({ ...form, action: e.target.value })}
-          className="border px-2 py-1 w-full"
         />
-        <button className="bg-green-500 text-white px-4 py-1">Add Rule</button>
+        <button>Add Rule</button>
       </form>
-      <table className="w-full table-auto bg-white shadow rounded">
+      <table className="rules-table">
         <thead>
           <tr>
             <th>Name</th>
@@ -74,12 +71,12 @@ export default function Rules() {
         <tbody>
           {rules.map(r => (
             <tr key={r._id}>
-              <td className="border px-2 py-1">{r.name}</td>
-              <td className="border px-2 py-1">{r.condition}</td>
-              <td className="border px-2 py-1">{r.action}</td>
-              <td className="border px-2 py-1">
+              <td>{r.name}</td>
+              <td>{r.condition}</td>
+              <td>{r.action}</td>
+              <td>
                 <button
-                  className="text-blue-500"
+                  className="action-button"
                   onClick={() => toggleActive(r)}
                 >
                   {r.active ? 'Deactivate' : 'Activate'}
