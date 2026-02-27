@@ -3,6 +3,13 @@ const alertService = require('../services/alertService');
 
 exports.createAlert = async (req, res) => {
   try {
+    const { type, message, priority } = req.body;
+    if (!type || !message) {
+      return res.status(400).json({ error: 'type and message are required' });
+    }
+    if (priority && !['low','medium','high'].includes(priority)) {
+      return res.status(400).json({ error: 'invalid priority' });
+    }
     const io = req.app.locals.io;
     const saved = await alertService.createAlertWithRules(req.body, io);
     res.status(201).json(saved);
