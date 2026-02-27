@@ -6,6 +6,7 @@ import './App.css';
 
 function App() {
   const [alerts, setAlerts] = useState([]);
+  const [filters, setFilters] = useState({ type: '', priority: '' });
 
   useEffect(() => {
     fetchAlerts();
@@ -32,9 +33,39 @@ function App() {
     ],
   };
 
+  const filtered = alerts.filter(a => {
+    if (filters.type && !a.type.includes(filters.type)) return false;
+    if (filters.priority && a.priority !== filters.priority) return false;
+    return true;
+  });
+
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <h1 className="text-2xl font-bold mb-4">RideOps Alert Dashboard</h1>
+      <div className="mb-4 flex space-x-2">
+        <input
+          className="border px-2 py-1"
+          placeholder="Type"
+          value={filters.type}
+          onChange={e => setFilters(f => ({ ...f, type: e.target.value }))}
+        />
+        <select
+          className="border px-2 py-1"
+          value={filters.priority}
+          onChange={e => setFilters(f => ({ ...f, priority: e.target.value }))}
+        >
+          <option value="">All priorities</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+        <button
+          className="bg-blue-500 text-white px-4 py-1"
+          onClick={() => setFilters({ type: '', priority: '' })}
+        >
+          Clear
+        </button>
+      </div>
       <div className="mb-8">
         <Line data={data} />
       </div>
@@ -50,7 +81,7 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {alerts.map(a => (
+          {filtered.map(a => (
             <tr key={a._id}>
               <td className="border px-4 py-2">{a.type}</td>
               <td className="border px-4 py-2">{a.priority}</td>
