@@ -1,9 +1,9 @@
 const Alert = require('../models/Alert');
+const alertService = require('../services/alertService');
 
 exports.createAlert = async (req, res) => {
   try {
-    const alert = new Alert(req.body);
-    const saved = await alert.save();
+    const saved = await alertService.createAlertWithRules(req.body);
     res.status(201).json(saved);
   } catch (err) {
     res.status(400).json({ error: err.message });
