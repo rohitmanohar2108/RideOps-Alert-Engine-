@@ -3,7 +3,8 @@ const alertService = require('../services/alertService');
 
 exports.createAlert = async (req, res) => {
   try {
-    const saved = await alertService.createAlertWithRules(req.body);
+    const io = req.app.locals.io;
+    const saved = await alertService.createAlertWithRules(req.body, io);
     res.status(201).json(saved);
   } catch (err) {
     res.status(400).json({ error: err.message });

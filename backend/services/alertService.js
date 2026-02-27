@@ -13,8 +13,12 @@ exports.applyRules = async (alert) => {
   return alert;
 };
 
-exports.createAlertWithRules = async (data) => {
+exports.createAlertWithRules = async (data, io) => {
   let alert = new Alert(data);
   alert = await exports.applyRules(alert);
-  return alert.save();
+  const saved = await alert.save();
+  if (io) {
+    io.emit('newAlert', saved);
+  }
+  return saved;
 };
