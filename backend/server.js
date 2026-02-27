@@ -18,7 +18,9 @@ app.get('/api/health', (req, res) => {
 
 // routes
 const alertRoutes = require('./routes/alertRoutes');
+const ruleRoutes = require('./routes/ruleRoutes');
 app.use('/api/alerts', alertRoutes);
+app.use('/api/rules', ruleRoutes);
 
 // connect to Mongo
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/rideops';

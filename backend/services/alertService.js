@@ -1,15 +1,24 @@
 const Alert = require('../models/Alert');
+const Rule = require('../models/Rule');
 
 /**
- * Example rule engine placeholder. In a real system rules might
- * be stored in DB or config and evaluated at runtime.
+ * Evaluate configured rules stored in database.
+ * This simplistic engine uses `eval` so it's only for demo purposes;
+ * a production system would parse AST or use a safe sandbox.
  */
-
 exports.applyRules = async (alert) => {
-  // simple escalation rule: high priority alerts escalate after creation
-  if (alert.priority === 'high' && alert.status === 'new') {
-    alert.status = 'escalated';
-  }
+  const rules = await Rule.find({ active: true });
+  rules.forEach(rule => {
+    try {
+      const conditionFunc = new Function('alert', `return ${rule.condition};`);
+      if (conditionFunc(alert)) {
+        const actionFunc = new Function('alert', rule.action);
+        actionFunc(alert);
+      }
+    } catch (err) {
+      console.error('Rule evaluation error', rule.name, err);
+    }
+  });
   return alert;
 };
 
