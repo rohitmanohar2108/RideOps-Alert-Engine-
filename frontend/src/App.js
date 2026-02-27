@@ -10,11 +10,14 @@ function App() {
 
   useEffect(() => {
     fetchAlerts();
-  }, []);
+  }, [filters]);
 
   const fetchAlerts = async () => {
     try {
-      const res = await axios.get('/api/alerts');
+      const params = {};
+      if (filters.type) params.type = filters.type;
+      if (filters.priority) params.priority = filters.priority;
+      const res = await axios.get('/api/alerts', { params });
       setAlerts(res.data);
     } catch (err) {
       console.error('Failed to fetch alerts', err);

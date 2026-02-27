@@ -12,7 +12,12 @@ exports.createAlert = async (req, res) => {
 
 exports.getAlerts = async (req, res) => {
   try {
-    const alerts = await Alert.find().sort({ createdAt: -1 });
+    // support basic query filtering
+    const filter = {};
+    if (req.query.type) filter.type = { $regex: req.query.type, $options: 'i' };
+    if (req.query.priority) filter.priority = req.query.priority;
+
+    const alerts = await Alert.find(filter).sort({ createdAt: -1 });
     res.json(alerts);
   } catch (err) {
     res.status(500).json({ error: err.message });
