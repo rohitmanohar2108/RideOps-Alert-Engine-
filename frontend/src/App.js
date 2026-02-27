@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
+import io from 'socket.io-client';
 import './App.css';
 
 function App() {
@@ -10,6 +11,13 @@ function App() {
 
   useEffect(() => {
     fetchAlerts();
+    const socket = io();
+    socket.on('newAlert', (alert) => {
+      setAlerts(prev => [alert, ...prev]);
+    });
+    return () => {
+      socket.disconnect();
+    };
   }, [filters]);
 
   const fetchAlerts = async () => {
